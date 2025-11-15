@@ -57,7 +57,7 @@ export default function GenerateIdeasPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Generate 52 Week Ideas</h1>
         <p className="text-muted-foreground">
-          Tell us about your newsletter and we'll generate a full year of content ideas
+          Tell us about your newsletter and we&apos;ll generate a full year of content ideas
         </p>
       </div>
 

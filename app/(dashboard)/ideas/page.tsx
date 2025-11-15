@@ -6,11 +6,13 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function IdeasPage() {
   const [ideas, setIdeas] = useState<any[]>([])
+  const [trends, setTrends] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
 
   useEffect(() => {
     fetchIdeas()
+    fetchTrends()
   }, [])
 
   const fetchIdeas = async () => {
@@ -22,6 +24,18 @@ export default function IdeasPage() {
 
     if (data) setIdeas(data)
     setLoading(false)
+  }
+
+  const fetchTrends = async () => {
+    try {
+      const res = await fetch('/api/ideas/trends')
+      if (res.ok) {
+        const data = await res.json()
+        setTrends(data.trends || [])
+      }
+    } catch (err) {
+      console.error('Failed to fetch trends', err)
+    }
   }
 
   const filteredIdeas = ideas.filter((idea) => {
@@ -56,6 +70,42 @@ export default function IdeasPage() {
           💡 Generate 52 Ideas
         </Link>
       </div>
+
+      {/* Trending Topics */}
+      {trends.length > 0 && (
+        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg p-6 mb-8 text-white">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-2xl">🔥</span>
+            <h2 className="text-2xl font-bold">Trending Topics</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {trends.slice(0, 6).map((trend, index) => (
+              <div
+                key={index}
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-semibold">{trend.topic}</h3>
+                  <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
+                    #{index + 1}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <div className="text-white/70 text-xs">Growth</div>
+                    <div className="font-bold">+{trend.growth_rate}%</div>
+                  </div>
+                  <div>
+                    <div className="text-white/70 text-xs">Relevance</div>
+                    <div className="font-bold">{(trend.relevance_score * 100).toFixed(0)}%</div>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-white/70 capitalize">{trend.category}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {ideas.length === 0 ? (
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-12 text-center">

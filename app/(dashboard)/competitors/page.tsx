@@ -27,12 +27,26 @@ export default function CompetitorsPage() {
           <h1 className="text-3xl font-bold mb-2">Competitor Intelligence</h1>
           <p className="text-muted-foreground">Monitor competition and find content gaps</p>
         </div>
-        <Link
-          href="/competitors/add"
-          className="px-6 py-3 bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white rounded-lg font-semibold transition-all"
-        >
-          🔍 Add Competitor
-        </Link>
+        <div className="flex gap-3">
+          <Link
+            href="/competitors/analysis"
+            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-lg font-semibold transition-all"
+          >
+            🔍 Analysis
+          </Link>
+          <Link
+            href="/competitors/gaps"
+            className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-lg font-semibold transition-all"
+          >
+            💡 Content Gaps
+          </Link>
+          <Link
+            href="/competitors/add"
+            className="px-6 py-3 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg font-semibold transition-all"
+          >
+            ➕ Add Competitor
+          </Link>
+        </div>
       </div>
 
       {competitors.length === 0 ? (

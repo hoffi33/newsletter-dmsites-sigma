@@ -27,12 +27,20 @@ export default function PersonalizationPage() {
           <h1 className="text-3xl font-bold mb-2">Personalization</h1>
           <p className="text-muted-foreground">Create variants for different audience segments</p>
         </div>
-        <Link
-          href="/personalization/segments"
-          className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-semibold transition-all"
-        >
-          🎯 Manage Segments
-        </Link>
+        <div className="flex gap-3">
+          <Link
+            href="/personalization/generate"
+            className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-semibold transition-all"
+          >
+            ✨ Generate Variants
+          </Link>
+          <Link
+            href="/personalization/segments"
+            className="px-6 py-3 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg font-semibold transition-all"
+          >
+            🎯 Manage Segments
+          </Link>
+        </div>
       </div>
 
       {segments.length === 0 ? (

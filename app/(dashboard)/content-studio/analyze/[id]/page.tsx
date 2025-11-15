@@ -147,7 +147,7 @@ export default function AnalyzePage({ params }: { params: Promise<{ id: string }
             <div className="space-y-3">
               {analysisData.quotes.map((quote: string, i: number) => (
                 <div key={i} className="border-l-4 border-blue-500 pl-4 italic">
-                  "{quote}"
+                  &ldquo;{quote}&rdquo;
                 </div>
               ))}
             </div>
