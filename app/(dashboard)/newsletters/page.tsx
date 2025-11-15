@@ -8,6 +8,8 @@ export default function NewslettersPage() {
   const [newsletters, setNewsletters] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState('date')
 
   useEffect(() => {
     fetchNewsletters()
@@ -24,10 +26,33 @@ export default function NewslettersPage() {
     setLoading(false)
   }
 
-  const filteredNewsletters = newsletters.filter((n) => {
-    if (filter === 'all') return true
-    return n.status === filter
-  })
+  const filteredNewsletters = newsletters
+    .filter((n) => {
+      // Filter by status
+      if (filter !== 'all' && n.status !== filter) return false
+
+      // Filter by search query
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase()
+        return (
+          (n.title && n.title.toLowerCase().includes(query)) ||
+          (n.selected_subject_line && n.selected_subject_line.toLowerCase().includes(query)) ||
+          (n.content_markdown && n.content_markdown.toLowerCase().includes(query))
+        )
+      }
+
+      return true
+    })
+    .sort((a, b) => {
+      if (sortBy === 'date') {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      } else if (sortBy === 'title') {
+        return (a.title || '').localeCompare(b.title || '')
+      } else if (sortBy === 'words') {
+        return (b.word_count || 0) - (a.word_count || 0)
+      }
+      return 0
+    })
 
   if (loading) {
     return (
@@ -68,6 +93,28 @@ export default function NewslettersPage() {
         </div>
       ) : (
         <>
+          {/* Search and Sort */}
+          <div className="mb-6 flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search newsletters by title or content..."
+                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700"
+              />
+            </div>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700"
+            >
+              <option value="date">Sort by Date</option>
+              <option value="title">Sort by Title</option>
+              <option value="words">Sort by Word Count</option>
+            </select>
+          </div>
+
           {/* Filters */}
           <div className="mb-6 flex gap-2">
             {['all', 'draft', 'ready', 'sent'].map((f) => (
@@ -83,6 +130,11 @@ export default function NewslettersPage() {
                 {f} ({newsletters.filter((n) => f === 'all' || n.status === f).length})
               </button>
             ))}
+          </div>
+
+          {/* Results Count */}
+          <div className="mb-4 text-sm text-muted-foreground">
+            Showing {filteredNewsletters.length} of {newsletters.length} newsletters
           </div>
 
           {/* Newsletters List */}
